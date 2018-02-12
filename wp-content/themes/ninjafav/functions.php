@@ -15,3 +15,10 @@ function ninjafav_stylesheet() {
 	wp_enqueue_style( 'checkout-style', get_template_directory_uri() . '/style.css' );
 }
 add_action( 'wp_enqueue_scripts', 'ninjafav_stylesheet' );
+
+add_filter( 'edd_default_downloads_name', function( $labels ) {
+	$labels['singular'] = __( 'Ninja', 'ninjafav' );
+	$labels['plural']   = __( 'Ninjas', 'ninjafav' );
+
+	return $labels;
+} );
