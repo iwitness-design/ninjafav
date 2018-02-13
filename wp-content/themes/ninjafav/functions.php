@@ -17,8 +17,8 @@ function ninjafav_stylesheet() {
 add_action( 'wp_enqueue_scripts', 'ninjafav_stylesheet' );
 
 add_filter( 'edd_default_downloads_name', function( $labels ) {
-	$labels['singular'] = __( 'Ninja', 'ninjafav' );
-	$labels['plural']   = __( 'Ninjas', 'ninjafav' );
+	$labels['singular'] = __( 'Product', 'ninjafav' );
+	$labels['plural']   = __( 'Products', 'ninjafav' );
 
 	return $labels;
 } );
