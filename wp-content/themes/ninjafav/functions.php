@@ -43,6 +43,11 @@ add_action( 'fes_payment_receipt_after_table', function( $payment ) {
 		</tr>
 
 		<tr>
+			<td><strong><?php _e( 'Party Date', 'ninjafav' ); ?>:</strong></td>
+			<td><?php echo esc_html( $payment->__get( 'child_party_date' ) ); ?></td>
+		</tr>
+
+		<tr>
 			<td><strong><?php _e( 'Gym Name', 'ninjafav' ); ?>:</strong></td>
 			<td><?php echo esc_html( $payment->__get( 'child_name_of_gym' ) ); ?></td>
 		</tr>
@@ -76,3 +81,64 @@ add_filter( 'edd_purchase_download_form', function( $purchase_form, $args ) {
 add_action( 'edd_add_to_cart', function( $data ) {
 	edd_empty_cart();
 }, 9 );
+
+add_filter( 'edd_payment_gateways', function( $gateways ) {
+	$gateways['manual'] = array(
+		'admin_label'    => __( 'Manual Payment', 'easy-digital-downloads' ),
+		'checkout_label' => __( 'Manual Payment', 'easy-digital-downloads' )
+	);
+
+	return $gateways;
+} );
+
+add_filter( 'edd_enabled_payment_gateways', function( $gateways ) {
+	if ( is_admin() ) {
+		return $gateways;
+	}
+
+	if ( 1 == rcp_get_subscription_id() ) {
+		unset( $gateways['stripe'] );
+	} else {
+		unset( $gateways['manual'] );
+	}
+
+	return $gateways;
+} );
+
+add_filter( 'eddc_commissions_calculated', function( $commission, $payment ) {
+	switch( $payment->total ) {
+		case '80':
+			unset( $commission[0]['type'] );
+			$commission[0]['rate'] = $commission[0]['commission_amount'] = 60;
+			break;
+		case '30':
+			unset( $commission[0]['type'] );
+			$commission[0]['rate'] = $commission[0]['commission_amount'] = 25;
+			break;
+		case '20':
+			unset( $commission[0]['type'] );
+			$commission[0]['rate'] = $commission[0]['commission_amount'] = 15;
+			break;
+	}
+
+	return $commission;
+}, 10, 2 );
+
+add_filter( 'cfm_get_field_value_return_value_frontend', function( $value, $field, $payment_id, $user_id ) {
+	if ( $value ) {
+		return $value;
+	}
+
+	$meta = edd_get_payment_meta( $payment_id );
+
+	switch( $field->id ) {
+		case 'edd_first' :
+			return $meta['user_info']['first_name'];
+		case 'edd_last' :
+			return $meta['user_info']['last_name'];
+		case 'edd_email' :
+			return $meta['email'];
+	}
+
+	return $value;
+}, 10, 4 );
