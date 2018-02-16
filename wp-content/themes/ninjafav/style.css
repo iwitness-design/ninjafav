@@ -28,4 +28,8 @@
   .fl-post-grid #infscr-loading img {
     margin: auto; }
 
+.single-download .author-info,
+.single-download .navigation {
+  display: none; }
+
 /*# sourceMappingURL=style.css.map */
