@@ -24,3 +24,13 @@
 .site-header .logo, .site-navigation {
 	max-width: 50%;
 }
+
+.fl-post-grid #infscr-loading {
+	margin-top: 4rem;
+	color: white;
+	bottom: -40px;
+
+	img {
+		margin: auto;
+	}
+}
