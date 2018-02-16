@@ -142,3 +142,60 @@ add_filter( 'cfm_get_field_value_return_value_frontend', function( $value, $fiel
 
 	return $value;
 }, 10, 4 );
+
+add_filter( 'eddc_email_template_tags', function( $tags ) {
+
+	$tags[] = array(
+		'tag'         => 'child_info',
+		'description' => __( 'The child info associated with the order', 'ninjafav' ),
+	);
+
+	$tags[] = array(
+		'tag'         => 'edit_link',
+		'description' => __( 'The edit link associated with the order', 'ninjafav' ),
+	);
+
+	return $tags;
+} );
+
+add_filter( 'eddc_sale_alert_email', function( $message, $user_id, $commission_amount, $rate, $download_id, $commission_id ) {
+	$commission = new EDD_Commission( $commission_id );
+
+	if ( ! empty( $commission->payment_id ) ) {
+		$payment = edd_get_payment( $commission->payment_id );
+	} else {
+		return $message;
+	}
+
+	ob_start();
+	?>
+		<?php _e( 'Name', 'ninjafav' ); ?>: <?php echo esc_html( get_post_meta( $payment->ID, 'child_name', true ) ); ?><br />
+		<?php _e( 'Age', 'ninjafav' ); ?>: <?php echo esc_html( get_post_meta( $payment->ID, 'child_age', true ) ); ?><br />
+		<?php _e( 'Party Date', 'ninjafav' ); ?>: <?php echo esc_html( get_post_meta( $payment->ID, 'child_party_date', true ) ); ?><br />
+		<?php _e( 'Gym Name', 'ninjafav' ); ?>: <?php echo esc_html( get_post_meta( $payment->ID, 'child_name_of_gym', true ) ); ?><br />
+		<?php _e( 'Favorite Obstacle', 'ninjafav' ); ?>: <?php echo esc_html( get_post_meta( $payment->ID, 'child_favorite_obstacle', true ) ); ?><br />
+		<?php _e( 'Notes', 'ninjafav' ); ?>: <?php echo esc_html( get_post_meta( $payment->ID, 'child_notes', true ) ); ?>
+	<?php
+
+	$child_info = ob_get_clean();
+
+	$args = array(
+		'task' => 'edit-order',
+		'order_id' => $payment->ID,
+	);
+
+	$link = add_query_arg( $args, get_home_url( null, 'vendor-dashboard' ) );
+
+	$message = str_replace( '{child_info}', $child_info, $message );
+	$message = str_replace( '{edit_link}', $link, $message );
+
+	return $message;
+}, 10, 6 );
+
+add_filter( 'edd_login_redirect', function( $redirect, $user_id ) {
+	if ( EDD_FES()->vendors->user_is_vendor( $user_id ) ) {
+		return get_home_url( null, 'vendor-dashboard' );
+	} else {
+		return get_home_url();
+	}
+}, 10, 2 );
