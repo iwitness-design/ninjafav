@@ -68,3 +68,11 @@ add_filter( 'fes_vendor_dashboard_menu', function( $menu_items ) {
 	unset( $menu_items['profile'] );
 	return $menu_items;
 } );
+
+add_filter( 'edd_purchase_download_form', function( $purchase_form, $args ) {
+	return sprintf( '<a href="/checkout?edd_action=add_to_cart&download_id=%d" class="button edd-submit">Purchase</a>', $args['download_id'] );
+}, 10, 2 );
+
+add_action( 'edd_add_to_cart', function( $data ) {
+	edd_empty_cart();
+}, 9 );

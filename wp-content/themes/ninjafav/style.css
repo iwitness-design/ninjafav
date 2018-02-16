@@ -11,8 +11,14 @@
  Tags:         two-columns, three-columns, featured-image-header, featured-images, theme-options, custom-background, custom-colors, custom-menu, custom-logo, editor-style, featured-images, theme-options, translation-ready, e-commerce, footer-widgets, full-width-template
  Text Domain:  ninjafav
 */
+.current-cart {
+  display: none !important; }
+
 .vendor-dashboard .site-content {
   background: #eee;
   padding: 3rem; }
+
+.site-header .logo, .site-navigation {
+  max-width: 50%; }
 
 /*# sourceMappingURL=style.css.map */

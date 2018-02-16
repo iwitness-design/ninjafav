@@ -12,7 +12,15 @@
  Text Domain:  ninjafav
 */
 
+.current-cart {
+	display: none !important;
+}
+
 .vendor-dashboard .site-content {
 	background: #eee;
 	padding: 3rem;
+}
+
+.site-header .logo, .site-navigation {
+	max-width: 50%;
 }
