@@ -184,7 +184,7 @@ add_filter( 'eddc_sale_alert_email', function( $message, $user_id, $commission_a
 		'order_id' => $payment->ID,
 	);
 
-	$link = add_query_arg( $args, get_home_url( null, 'vendor-dashboard' ) );
+	$link = add_query_arg( $args, get_home_url( null, 'ninja-dashboard' ) );
 
 	$message = str_replace( '{child_info}', $child_info, $message );
 	$message = str_replace( '{edit_link}', $link, $message );
@@ -194,7 +194,7 @@ add_filter( 'eddc_sale_alert_email', function( $message, $user_id, $commission_a
 
 add_filter( 'edd_login_redirect', function( $redirect, $user_id ) {
 	if ( EDD_FES()->vendors->user_is_vendor( $user_id ) ) {
-		return get_home_url( null, 'vendor-dashboard' );
+		return get_home_url( null, 'ninja-dashboard' );
 	} else {
 		return get_home_url();
 	}
